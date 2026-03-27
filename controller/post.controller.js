@@ -44,6 +44,7 @@ export async function getAllPosts(req, res) {
 
     res.status(200).json({
         status: 200,
+        totalCount: totalCount,
         data: data,
     });
 }
