@@ -103,3 +103,17 @@ export async function getPostByUserId(req, res) {
         posts: data,
     });
 }
+
+export async function getPostLikesCount(req, res) {
+    const { id } = req.params;
+
+    const { rows: data } = await pool.query(
+        `SELECT COUNT(*) as like_count FROM likes WHERE post_id = $1`,
+        [id],
+    );
+
+    res.status(200).json({
+        status: 200,
+        likesCount: data,
+    });
+}

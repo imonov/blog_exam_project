@@ -49,3 +49,17 @@ export async function createUser(req, res) {
         });
     }
 }
+
+export async function getPostCount(req, res) {
+    const { id: user_id } = req.params;
+
+    const { rows: data } = await pool.query(
+        `SELECT COUNT(*) AS post_count FROM posts WHERE user_id = $1;`,
+        [user_id],
+    );
+
+    res.status(200).json({
+        status: 200,
+        postCount: data,
+    });
+}
