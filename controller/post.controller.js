@@ -1,7 +1,46 @@
 import { pool } from "../config/db.config.js";
 
 export async function getAllPosts(req, res) {
-    const { rows: data } = await pool.query(`SELECT * FROM posts;`);
+    const {
+        page = 1,
+        limit = 10,
+        search,
+        author,
+        sortOrder = "asc",
+        sortBy,
+    } = req.query;
+    const offset = (page - 1) * limit;
+    let query = `SELECT * FROM posts`;
+
+    if (search) {
+        query += `WHERE title ILIKE '%${search}%' OR content ILIKE '%${search}%'`;
+    }
+
+    if (author) {
+        query += ` WHERE user_id = ${author}`;
+    }
+
+    const SORTABLE_FIELDS = ["id", "title"];
+    if (sortBy) {
+        if (!SORTABLE_FIELDS.includes(sortBy)) {
+            return res.status(400).json({
+                status: 400,
+                message: `Sorting available only for this columns: ${SORTABLE_FIELDS.join(", ")}`,
+            });
+        }
+
+        query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
+    }
+
+    const countQuery = query
+        .replace("SELECT *", "SELECT COUNT(*)")
+        .replace(/ORDER BY.+/i, "");
+
+    const { rows: totalCount } = await pool.query(countQuery);
+
+    const { rows: data } = await pool.query(
+        (query += ` LIMIT ${limit} OFFSET ${offset};`),
+    );
 
     res.status(200).json({
         status: 200,
