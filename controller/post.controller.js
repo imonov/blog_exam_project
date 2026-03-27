@@ -97,4 +97,9 @@ export async function getPostByUserId(req, res) {
         `SELECT * FROM posts WHERE user_id = $1;`,
         [user_id],
     );
+
+    res.status(200).json({
+        status: 200,
+        posts: data,
+    });
 }

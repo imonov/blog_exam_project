@@ -4,6 +4,7 @@ import {
     deletePost,
     getAllPosts,
     getPostById,
+    getPostByUserId,
     updatePost,
 } from "../controller/post.controller.js";
 
@@ -14,4 +15,5 @@ postRouter
     .get("/posts/:id", getPostById)
     .post("/posts", createPost)
     .put("/posts/:id", updatePost)
-    .delete("/posts/:id", deletePost);
+    .delete("/posts/:id", deletePost)
+    .get("/users/:id/posts", getPostByUserId);
