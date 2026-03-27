@@ -10,5 +10,5 @@ app.use(cors());
 app.use("/api", apiRouter);
 
 app.listen(PORT, () => {
-    console.log(`Server address: http:/127.0.0.1:${PORT}`);
+    console.log(`Server address: http://127.0.0.1:${PORT}`);
 });
